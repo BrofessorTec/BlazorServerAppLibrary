@@ -42,7 +42,18 @@ else if (CurrentPage == "Manage Books")
 
     @if (SubPage == "Edit Book")
     {
+        @foreach (Book book in Books.Books)
+        {
+            <h3>
+                ID: @book.Id
+                <br />Author: @book.Author
+                <br />Title: @book.Title
+                <br />ISBN: @book.ISBN
+
+            </h3>
+        }
         <h3>Book ID:<input @bind=currBookID /> <br /></h3>
+
     }
     @if (SubPage == "Edit Book" && currBookID != -1)
     {
@@ -55,6 +66,16 @@ else if (CurrentPage == "Manage Books")
 
     @if (SubPage == "Delete Book")
     {
+        @foreach (Book book in Books.Books)
+        {
+            <h3>
+                ID: @book.Id
+                <br />Author: @book.Author
+                <br />Title: @book.Title
+                <br />ISBN: @book.ISBN
+
+            </h3>
+        }
         <h3>Book ID:<input @bind=currBookID /> <br /></h3>
     }
     @if (SubPage == "Delete Book" && currBookID != -1)
@@ -100,6 +121,14 @@ else if (CurrentPage == "Manage Users")
 
     @if (SubPage == "Edit User")
     {
+        @foreach (User user in Users.Users)
+        {
+            <h3>
+                ID: @user.Id
+                <br />Name: @user.Name
+                <br />Email: @user.Email
+            </h3>
+        }
         <h3>User ID:<input @bind=currUserID /> <br /></h3>
     }
     @if (SubPage == "Edit User" && currUserID != -1)
@@ -111,6 +140,14 @@ else if (CurrentPage == "Manage Users")
 
     @if (SubPage == "Delete User")
     {
+        @foreach (User user in Users.Users)
+        {
+            <h3>
+                ID: @user.Id
+                <br />Name: @user.Name
+                <br />Email: @user.Email
+            </h3>
+        }
         <h3>User ID:<input @bind=currUserID /> <br /></h3>
     }
     @if (SubPage == "Delete User" && currUserID != -1)
@@ -253,6 +290,10 @@ else if (CurrentPage == "Returning Book")
             }
             <h3>Enter a number to return this book: :<input @bind=returnerBookNum /></h3>
             <button class="btn btn-danger" @onclick=ReturningBookNum>Confirm Book Number</button>
+        }
+        else
+        {
+            <h3>There are no books to return for this user.</h3>
         }
 
     }
