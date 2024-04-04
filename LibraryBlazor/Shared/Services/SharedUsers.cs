@@ -1,6 +1,6 @@
-﻿using LibraryBlazorApp.Data;
+﻿using LibraryBlazor.Data;
 
-namespace LibraryBlazorApp.Shared.Services
+namespace LibraryBlazor.Shared.Services
 {
     public class SharedUsers : ISharedUsers
     {

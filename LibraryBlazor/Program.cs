@@ -1,8 +1,6 @@
-using LibraryBlazor.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using LibraryBlazorApp.Data;
-using LibraryBlazorApp.Shared.Services;
+using LibraryBlazor.Shared.Services;
 
 namespace LibraryBlazor
 {
