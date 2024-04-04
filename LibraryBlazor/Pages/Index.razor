@@ -1,0 +1,521 @@
+﻿
+@page "/"
+@using LibraryBlazorApp.Data
+@inject NavigationManager NavigationManager
+@using LibraryBlazorApp.Shared.Services
+@inject ISharedUsers Users
+@inject ISharedBooks Books
+
+<PageTitle>Index</PageTitle>
+
+<h1>
+    Library Management System<br>
+    @*Current Page: @CurrentPage*@
+</h1>
+@if (CurrentPage == "Home Page")
+{
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    <button class="btn btn-primary" @onclick=ManageBooksPage>Manage Books</button>
+    <button class="btn btn-primary" @onclick=ManageUsersPage>Manage Users</button>
+    <button class="btn btn-primary" @onclick=BorrowBooksPage>Borrow Book</button>
+    <button class="btn btn-primary" @onclick=ReturnBooksPage>Return Book</button>
+    <button class="btn btn-primary" @onclick=ListBorrowedBooksPage>List Borrowed Books</button>
+}
+else if (CurrentPage == "Manage Books")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    // add book
+    // unique id, book title, author, isbn
+    // probably use a button that pulls up a form of those 3 options?
+    <button class="btn btn-primary" @onclick=AddBook>Add Book</button>
+
+    // edit book
+    // use book id to edit that book info (besides id)
+    <button class="btn btn-primary" @onclick=EditBook>Edit Book</button>
+    // delete book
+    // use book id to delete a book
+    <button class="btn btn-primary" @onclick=DeleteBook>Delete Book</button>
+    // list books
+    // list each book
+    <button class="btn btn-primary" @onclick=ListBooks>List Books</button>
+
+    @if (SubPage == "Edit Book")
+    {
+        <h3>Book ID:<input @bind=currBookID /> <br /></h3>
+    }
+    @if (SubPage == "Edit Book" && currBookID != -1)
+    {
+        <h3>New Book Title:<input @bind=newBookTitle /> <br /></h3>
+        <h3>New Book Author:<input @bind=newBookAuthor /> <br /></h3>
+        <h3>New Book ISBN:<input @bind=newBookISBN /> <br /></h3>
+
+        <button class="btn btn-primary" @onclick=UpdateBook>Update Book</button>
+    }
+
+    @if (SubPage == "Delete Book")
+    {
+        <h3>Book ID:<input @bind=currBookID /> <br /></h3>
+    }
+    @if (SubPage == "Delete Book" && currBookID != -1)
+    {
+        <button class="btn btn-primary" @onclick=RemoveBook>Remove Book</button>
+    }
+
+    @if (SubPage == "List Books")
+    {
+        @foreach (Book book in Books.Books)
+        {
+            <h3>
+                ID: @book.Id
+                <br />Author: @book.Author
+                <br />Title: @book.Title
+                <br />ISBN: @book.ISBN
+
+            </h3>
+        }
+
+    }
+}
+
+else if (CurrentPage == "Manage Users")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    // add user
+    // ask for a username and email and save it to a unique id
+    <button class="btn btn-primary" @onclick=AddUser>Add User</button>
+    //<UserForm OnSubmit="HandleFormSubmission" />
+
+
+    // edit user
+                // using id, edit username or email
+    <button class="btn btn-primary" @onclick=EditUser>Edit User</button>
+    // delete user
+    // using id, delete user
+    <button class="btn btn-primary" @onclick=DeleteUser>Delete User</button>
+    // list users
+    // list users
+    <button class="btn btn-primary" @onclick=ListUsers>List Users</button>
+
+    @if (SubPage == "Edit User")
+    {
+        <h3>User ID:<input @bind=currUserID /> <br /></h3>
+    }
+    @if (SubPage == "Edit User" && currUserID != -1)
+    {
+        <h3>New User Name:<input @bind=newUserName /> <br /></h3>
+        <h3>New User Email:<input @bind=newUserEmail /> <br /></h3>
+        <button class="btn btn-primary" @onclick=UpdateUser>Update User</button>
+    }
+
+    @if (SubPage == "Delete User")
+    {
+        <h3>User ID:<input @bind=currUserID /> <br /></h3>
+    }
+    @if (SubPage == "Delete User" && currUserID != -1)
+    {
+        <button class="btn btn-primary" @onclick=RemoveUser>Remove User</button>
+    }
+
+    @if (SubPage == "List Users")
+    {
+        bool notEmpty = false;
+
+        @foreach (User user in Users.Users)
+        {
+            notEmpty = true;
+            <h3>
+                ID: @user.Id
+                <br />Name: @user.Name
+                <br />Email: @user.Email
+            </h3>
+        }
+
+        @if (!notEmpty)
+        {
+            //this currently is not working
+            <h3>
+                No Users in System
+            </h3>
+        }
+    }
+}
+
+else if (CurrentPage == "Borrow Book")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    // could list available books here with a foreach?
+    <h3>Book ID to Borrow:<input @bind=borrowId /> <br /></h3>
+    @foreach (Book book in Books.Books)
+    {
+        <h3>
+            ID: @book.Id
+            <br />Author: @book.Author
+            <br />Title: @book.Title
+            <br />ISBN: @book.ISBN
+
+        </h3>
+    }
+    <button class="btn btn-primary" @onclick=BorrowingBook>Confirm Book Id</button>
+}
+
+else if (CurrentPage == "Borrowing Book")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    @if (borrowId > 0)
+    {
+        bookToBorrow = Books.Books.FirstOrDefault(b => b.Id == borrowId);
+        if (bookToBorrow != null && Books.Books.Count(b => b.Id == borrowId) > 0)
+        {
+            // could list available users here with a foreach?
+            <h3>User ID to Borrow:<input @bind=borrowerUserId /> <br /></h3>
+            @foreach (User user in Users.Users)
+            {
+                <h3>
+                    ID: @user.Id
+                    <br />Name: @user.Name
+                    <br />Email: @user.Email
+                </h3>
+            }
+            <button class="btn btn-primary" @onclick=UserBorrowingBook>Confirm User Id</button>
+        }
+        else
+        {
+            <h3>Book not found or not available.</h3>
+        }
+
+    }
+}
+
+else if (CurrentPage == "User Borrowing Book")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+
+    @if (borrowerUserId > 0)
+    {
+        User user = Users.Users.FirstOrDefault(u => u.Id == borrowerUserId);
+        if (user != null)
+        {
+            if (!borrowedBooks.ContainsKey(user))
+            {
+                borrowedBooks[user] = new List<Book>();
+            }
+            borrowedBooks[user].Add(bookToBorrow);
+            Books.Books.Remove(bookToBorrow);
+            <h3>Successfully borrowing the book.</h3>
+        }
+        else
+        {
+            <h3>User not found.</h3>
+        }
+    }
+}
+
+else if (CurrentPage == "Return Book")
+{
+
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+
+    <h3>User ID to Return a Book:<input @bind=returnerId /> <br /></h3>
+    @foreach (User user in Users.Users)
+    {
+        <h3>
+            ID: @user.Id
+            <br />Name: @user.Name
+            <br />Email: @user.Email
+        </h3>
+    }
+    <button class="btn btn-primary" @onclick=ReturningBook>Confirm User Id</button>
+}
+
+else if (CurrentPage == "Returning Book")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+
+    @if (returnerId > 0)
+    {
+        returningUser = Users.Users.FirstOrDefault(u => u.Id == returnerId);
+
+        if (returningUser != null && borrowedBooks.ContainsKey(returningUser) && borrowedBooks[returningUser].Count > 0)
+        {
+            for (int i = 0; i < borrowedBooks[returningUser].Count; i++)
+            {
+                <h3>
+                    @(i + 1). @borrowedBooks[returningUser][i].Title by @borrowedBooks[returningUser][i].Author (ISBN: @borrowedBooks[returningUser][i].ISBN)
+                    <br />
+                </h3>
+            }
+            <h3>Enter a number to return this book: :<input @bind=returnerBookNum /></h3>
+            <button class="btn btn-primary" @onclick=ReturningBookNum>Confirm Book Number</button>
+        }
+
+    }
+}
+
+else if (CurrentPage == "Returning Book Num")
+{
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+
+    @if (returnerBookNum > 0)
+    {
+        bookToReturn = borrowedBooks[returningUser][returnerBookNum - 1];
+        borrowedBooks[returningUser].RemoveAt(returnerBookNum - 1);
+        Books.Books.Add(bookToReturn);
+        <h3>Book successfully returned.</h3>
+    }
+}
+
+
+else if (CurrentPage == "List Borrowed Books")
+{
+
+    // home page
+    <button class="btn btn-primary" @onclick=HomePage>Home Page</button>
+    bool notEmpty = false;
+
+    foreach (var entry in borrowedBooks)
+    {
+        if (entry.Value.Count != 0)
+        {
+            <h3>User: @entry.Key.Name</h3>
+            notEmpty = true;
+
+            foreach (var book in entry.Value)
+            {
+                <h3>@book.Title by @book.Author (ISBN: @book.ISBN)</h3>
+            }
+
+            <br />
+
+        }
+    }
+    @if (!notEmpty)
+    {
+        <h3>No books being borrowed.</h3>
+    }
+
+}
+@*
+<br />
+<br />
+<img src="..\wwwroot/images/Books.jpg" alt="Book Cover" />
+<img src="~/images/Books.jpg" alt="Book Cover" />
+<img src="..\wwwroot/images\Books.jpg" alt="Book Cover" />
+*@
+
+
+@code {
+    private string CurrentPage = "Home Page";
+    private string SubPage = "Default";
+    private int currUserID = -1;
+    private string newUserName;
+    private string newUserEmail;
+    private int currBookID = -1;
+    private string newBookTitle;
+    private string newBookAuthor;
+    private string newBookISBN;
+    private int borrowId = -1;
+    private int borrowerUserId = -1;
+    public Dictionary<User, List<Book>> borrowedBooks = new Dictionary<User, List<Book>>();
+    Book bookToBorrow = null;
+    private int returnerId = -1;
+    User returningUser = null;
+    private int returnerBookNum = -1;
+    Book bookToReturn = null;
+
+
+    public void HomePage()
+    {
+        CurrentPage = "Home Page";
+        SubPage = "Default";
+        currUserID = -1;
+        newUserName = null;
+        newUserEmail = null;
+        currBookID = -1;
+        newBookTitle = null;
+        newBookAuthor = null;
+        newBookISBN = null;
+        borrowId = -1;
+        borrowerUserId = -1;
+        bookToBorrow = null;
+        returnerId = -1;
+        returningUser = null;
+        returnerBookNum = -1;
+        bookToReturn = null;
+    }
+
+    public void ManageBooksPage()
+    {
+        CurrentPage = "Manage Books";
+    }
+
+    public void ManageUsersPage()
+    {
+        CurrentPage = "Manage Users";
+    }
+
+    public void BorrowBooksPage()
+    {
+        CurrentPage = "Borrow Book";
+    }
+
+    public void BorrowingBook()
+    {
+        CurrentPage = "Borrowing Book";
+    }
+
+    public void UserBorrowingBook()
+    {
+        CurrentPage = "User Borrowing Book";
+    }
+
+    public void ReturnBooksPage()
+    {
+        CurrentPage = "Return Book";
+    }
+
+    public void ReturningBook()
+    {
+        CurrentPage = "Returning Book";
+    }
+
+    public void ReturningBookNum()
+    {
+        CurrentPage = "Returning Book Num";
+    }
+
+    public void ListBorrowedBooksPage()
+    {
+        CurrentPage = "List Borrowed Books";
+    }
+
+    public void AddUser()
+    {
+        //User test = new User {Id=0, Name="Test", Email="Test@email.com" };
+        //Users.Users.Add(test);
+        // this test worked, leaving just for reference
+        NavigationManager.NavigateTo("/UserForm");
+    }
+
+    public void EditUser()
+    {
+        SubPage = "Edit User";
+    }
+
+    public void UpdateUser()
+    {
+        for (int i = 0; i < Users.Users.Count; i++)
+        {
+            User user = Users.Users[i];
+            if (user.Id == currUserID)
+            {
+                if (newUserName != null)
+                {
+                    user.Name = newUserName;
+                }
+                if (newUserEmail != null)
+                {
+                    user.Email = newUserEmail;
+                }
+            }
+        }
+        HomePage();
+    }
+
+    public void DeleteUser()
+    {
+        SubPage = "Delete User";
+    }
+
+    public void RemoveUser()
+    {
+        for (int i = 0; i < Users.Users.Count; i++)
+        {
+            User user = Users.Users[i];
+            if (user.Id == currUserID)
+            {
+                Users.Users.Remove(user);
+            }
+        }
+        HomePage();
+    }
+
+    public void ListUsers()
+    {
+        foreach (User user in Users.Users)
+        {
+            //Console.WriteLine($"User ID: {user.Id}\nName: {user.Name}\nEmail: {user.Email}\n");
+            SubPage = "List Users";
+            // this is not printing anything on the page so far. Is the form adding it correctly?
+        }
+    }
+
+    // books below here
+    public void AddBook()
+    {
+        NavigationManager.NavigateTo("/BookForm");
+    }
+
+    public void EditBook()
+    {
+        SubPage = "Edit Book";
+    }
+
+    public void UpdateBook()
+    {
+        for (int i = 0; i < Books.Books.Count; i++)
+        {
+            Book book = Books.Books[i];
+            if (book.Id == currBookID)
+            {
+                if (newBookTitle != null)
+                {
+                    book.Title = newBookTitle;
+                }
+                if (newBookAuthor != null)
+                {
+                    book.Author = newBookAuthor;
+                }
+                if (newBookISBN != null)
+                {
+                    book.ISBN = newBookISBN;
+                }
+            }
+        }
+        HomePage();
+    }
+
+    public void DeleteBook()
+    {
+        SubPage = "Delete Book";
+    }
+
+    public void RemoveBook()
+    {
+        for (int i = 0; i < Books.Books.Count; i++)
+        {
+            Book book = Books.Books[i];
+            if (book.Id == currBookID)
+            {
+                Books.Books.Remove(book);
+            }
+        }
+        HomePage();
+    }
+
+    public void ListBooks()
+    {
+        foreach (Book book in Books.Books)
+        {
+            SubPage = "List Books";
+        }
+    }
+
+}

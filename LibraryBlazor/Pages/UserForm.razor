@@ -1,0 +1,34 @@
+﻿@page "/UserForm"
+@using System.ComponentModel.DataAnnotations;
+@using LibraryBlazorApp.Data;
+@inject NavigationManager NavigationManager
+@using LibraryBlazorApp.Shared.Services
+@inject ISharedUsers Users
+
+<h3>Enter User Details:</h3>
+
+<form @onsubmit="SubmitForm">
+    <label>Name:</label>
+    <input @bind=name />
+    <br />
+
+    <label>Email:</label>
+    <input @bind=email />
+    <br />
+
+    <button type="submit">Submit</button>
+</form>
+
+@code {
+    private string name;
+    private string email;
+    User user;
+
+    private void SubmitForm()
+    {
+        int id = Users.Users.Any() ? Users.Users.Max(u => u.Id) + 1 : 1;
+        user = new User { Id= id, Name = name, Email = email };
+        Users.Users.Add(user);
+        NavigationManager.NavigateTo("/");
+    }
+}

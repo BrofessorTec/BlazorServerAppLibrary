@@ -1,0 +1,40 @@
+﻿@page "/BookForm"
+@using System.ComponentModel.DataAnnotations;
+@using LibraryBlazorApp.Data;
+@inject NavigationManager NavigationManager
+@using LibraryBlazorApp.Shared.Services
+@inject ISharedBooks Books
+
+<h3>Enter Book Details:</h3>
+
+<form @onsubmit="SubmitForm">
+    <label>Title:</label>
+    <input @bind=title />
+    <br />
+
+    <label>Author:</label>
+    <input @bind=author />
+    <br />
+
+    <label>ISBN:</label>
+    <input @bind=isbn />
+    <br />
+
+    <button type="submit">Submit</button>
+</form>
+
+@code {
+    private string title;
+    private string author;
+    private string isbn;
+    Book book;
+
+
+    private void SubmitForm()
+    {
+        int id = Books.Books.Any() ? Books.Books.Max(u => u.Id) + 1 : 1;
+        book = new Book { Id = id, Title = title, Author = author, ISBN = isbn };
+        Books.Books.Add(book);
+        NavigationManager.NavigateTo("/");
+    }
+}
