@@ -50,7 +50,7 @@ else if (CurrentPage == "Manage Books")
         <h3>New Book Author:<input @bind=newBookAuthor /> <br /></h3>
         <h3>New Book ISBN:<input @bind=newBookISBN /> <br /></h3>
 
-        <button class="btn btn-primary" @onclick=UpdateBook>Update Book</button>
+        <button class="btn btn-danger" @onclick=UpdateBook>Update Book</button>
     }
 
     @if (SubPage == "Delete Book")
@@ -59,7 +59,7 @@ else if (CurrentPage == "Manage Books")
     }
     @if (SubPage == "Delete Book" && currBookID != -1)
     {
-        <button class="btn btn-primary" @onclick=RemoveBook>Remove Book</button>
+        <button class="btn btn-danger" @onclick=RemoveBook>Remove Book</button>
     }
 
     @if (SubPage == "List Books")
@@ -106,7 +106,7 @@ else if (CurrentPage == "Manage Users")
     {
         <h3>New User Name:<input @bind=newUserName /> <br /></h3>
         <h3>New User Email:<input @bind=newUserEmail /> <br /></h3>
-        <button class="btn btn-primary" @onclick=UpdateUser>Update User</button>
+        <button class="btn btn-danger" @onclick=UpdateUser>Update User</button>
     }
 
     @if (SubPage == "Delete User")
@@ -115,7 +115,7 @@ else if (CurrentPage == "Manage Users")
     }
     @if (SubPage == "Delete User" && currUserID != -1)
     {
-        <button class="btn btn-primary" @onclick=RemoveUser>Remove User</button>
+        <button class="btn btn-danger" @onclick=RemoveUser>Remove User</button>
     }
 
     @if (SubPage == "List Users")
@@ -158,7 +158,7 @@ else if (CurrentPage == "Borrow Book")
 
         </h3>
     }
-    <button class="btn btn-primary" @onclick=BorrowingBook>Confirm Book Id</button>
+    <button class="btn btn-danger" @onclick=BorrowingBook>Confirm Book Id</button>
 }
 
 else if (CurrentPage == "Borrowing Book")
@@ -180,7 +180,7 @@ else if (CurrentPage == "Borrowing Book")
                     <br />Email: @user.Email
                 </h3>
             }
-            <button class="btn btn-primary" @onclick=UserBorrowingBook>Confirm User Id</button>
+            <button class="btn btn-danger" @onclick=UserBorrowingBook>Confirm User Id</button>
         }
         else
         {
@@ -230,7 +230,7 @@ else if (CurrentPage == "Return Book")
             <br />Email: @user.Email
         </h3>
     }
-    <button class="btn btn-primary" @onclick=ReturningBook>Confirm User Id</button>
+    <button class="btn btn-danger" @onclick=ReturningBook>Confirm User Id</button>
 }
 
 else if (CurrentPage == "Returning Book")
@@ -252,7 +252,7 @@ else if (CurrentPage == "Returning Book")
                 </h3>
             }
             <h3>Enter a number to return this book: :<input @bind=returnerBookNum /></h3>
-            <button class="btn btn-primary" @onclick=ReturningBookNum>Confirm Book Number</button>
+            <button class="btn btn-danger" @onclick=ReturningBookNum>Confirm Book Number</button>
         }
 
     }
